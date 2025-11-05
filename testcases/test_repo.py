@@ -30,5 +30,6 @@ def test_repo_full_flow():
     # 删除仓库
     desult_result=delete_gitee_repo(repo_full_name)
     assert desult_result is True,"❌ 仓库删除失败"
+    logger.info(f"✅ 仓库 {repo_full_name} 已成功删除")
 
     logger.info("🎉 仓库全流程测试通过！")
