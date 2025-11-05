@@ -1,0 +1,9 @@
+.venv/ 
+config/config.yaml
+logs/ 
+allure-results/ 
+allure-report/ 
+.idea/ 
+*.iml 
+__pycache__/ 
+*.pyc 

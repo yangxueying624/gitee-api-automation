@@ -1,0 +1,44 @@
+Python 字典：
+是 Python 语言里的数据格式： {"message": "Upload file", "content": "xxx"}
+JSON 字符串：
+是能在网络上传输的文本格式：'{"message": "Upload file", "content": "xxx"}'
+
+接口只认 JSON 字符串，不认 Python 字典 —— 如果直接把字典传给接口，接口会 “看不懂”
+
+
+1. 手动转（如果不用 json=json_data，就得用 json 库把字典转成 JSON 字符）
+json_data = {
+    "message": "Upload file:test.txt",
+    "content": "base64编码后的内容"
+}
+# 手动把字典转成JSON字符串
+json_str = json.dumps(json_data)  # 结果是 '{"message": "Upload file:test.txt", "content": "base64编码后的内容"}'
+# 手动加请求头（告诉接口“这是JSON格式”）
+headers = {
+    "Authorization": "token 你的token",
+    "Content-Type": "application/json"  # 必须加这行！
+}
+# 用 data=参数传JSON字符串（注意：这里是data，不是json）
+response = requests.post(
+    url="Gitee上传接口URL",
+    headers=headers,
+    data=json_str  # 传手动转好的JSON字符串
+)
+
+
+2. 用 json = 参数自动转
+requests 库的 json=json_data 参数会帮你做两件事:
+（1）自动把 Python 字典 json_data 转成 JSON 字符串（相当于帮你调用 json.dumps(json_data)）
+（2）自动在请求头里加 Content-Type: application/json（不用你手动写 headers）
+# 定义Python字典（不用管转换）
+json_data = {
+    "message": "Upload file:test.txt",
+    "content": "base64编码后的内容"
+}
+# 直接用 json=参数传字典（其他都不用管）
+response = requests.post(
+    url="Gitee上传接口URL",
+    headers={"Authorization": "token 你的token"},
+    json=json_data  # 核心：传Python字典，requests自动转JSON字符串+加请求头
+)
+
