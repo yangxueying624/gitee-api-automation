@@ -1,0 +1,16 @@
+[
+  {
+    "用例ID": "TC001",
+    "repo_name": "test-repo-normal-{time}",
+    "repo_desc": "JSON正常创建仓库",
+    "expected_status": 201,
+    "expected_msg": "正常创建"
+  },
+  {
+    "用例ID": "TC002",
+    "repo_name": "test repo_json_invalid",
+    "repo_desc": "JSON异常-名称含空格",
+    "expected_status": 400,
+    "expected_msg": "参数非法"
+  }
+]

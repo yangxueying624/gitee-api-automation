@@ -1,9 +1,23 @@
-.venv/ 
-config/config.yaml
-logs/ 
-allure-results/ 
-allure-report/ 
-.idea/ 
-*.iml 
-__pycache__/ 
-*.pyc 
+# 环境变量
+.env
+
+# 忽略Python编译缓存文件
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE 忽略Python编辑器配置，每个人本地IDE配置不同，不用上传
+.idea/
+
+# 测试产物：运行自动生成，不用上传
+allure-results/
+logs/
+*.log
+
+# Excel临时缓存文件
+data/~$*
+
+# 构建产物：运行自动生成，不用上传
+dist/
+build/
+*.egg-info/
