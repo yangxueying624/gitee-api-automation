@@ -1,0 +1,7 @@
+pytest
+allure-pytest
+requests
+pandas
+openpyxl
+pyyaml
+python-dotenv

@@ -1,0 +1,51 @@
+# Github自动化流水线，推送代码/提交合并请求时自动执行测试
+name: API Test CI
+
+# 触发条件：什么情况下自动运行流水线
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+# 任务配置：流水线需要完成的工作
+jobs:
+  # 任务名称：测试任务
+  test:
+    # 运行环境：使用Github提供的最新Ubuntu免费虚拟机
+    runs-on: ubuntu-latest
+
+    # 执行步骤：从上到下依次执行
+    steps:
+      # 步骤1：从仓库拉取下载全部项目代码到虚拟机
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 步骤2：搭建Python运行环境，指定3.10版本
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # 步骤3：安装项目所有第三方依赖库
+      - name: Install dependencies
+        # run代表当前步骤执行终端shell命令；|是多行文本标记符，表示下方有多行命令，换行依次执行
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  
+
+      # 步骤4：注入Gitee密钥环境变量，执行自动化用例并生成Allure报告
+      - name: Run pytest with Allure report
+        env:
+          # 读取仓库后台配置的
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          pytest testcases/ --alluredir=allure-results -v
+
+      # 步骤5：上传保存Allure报告文件，无论用例成功失败都保留报告
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
