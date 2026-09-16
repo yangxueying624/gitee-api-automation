@@ -1,7 +1,7 @@
 pytest~=9.0.3
 allure-pytest
 requests~=2.33.1
-pandas~=3.0.2
+pandas~=2.2
 openpyxl
 pyyaml~=6.0.3
 python-dotenv~=1.2.2
