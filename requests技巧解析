@@ -44,7 +44,6 @@ response = requests.post(
 
 
 
-
 常用的三种模式：w / r / a
 w：写模式，会覆盖文件内容
     如果文件不存在，则创建文件；如果文件存在，则覆盖文件内容。
@@ -52,3 +51,42 @@ r：读模式，只能读不能写
     如果文件不存在，则报错；如果文件存在，则从头开始读。
 a：追加模式，会在文件末尾追加内容
     如果文件不存在，则创建文件；如果文件存在，则在末尾追加内容。
+
+
+
+Requests 参数笔记（params /data/json）
+一、params：URL 查询参数
+- 存放位置：URL末尾 `?key=val`
+- 作用：拼在网址后面，用来传递筛选、分页参数（例如页码、搜索关键词）
+       https://gitee.com/api/v5/user/repos?page=1&per_page=20
+- 传入：Python 字典，自动拼接、自动编码特殊字符
+- 适用：GET、DELETE 等，用来传递简单查询条件
+
+二、data：填充请求体 Body（原始报文）
+位置：请求体，和`json`同一个地方
+1. data = 字典
+- requests 自动转成表单字符串：`key1=val1&key2=val2`
+- 自动添加请求头：`Content-Type: application/x-www-form-urlencoded`
+- 限制：只支持扁平单层键值对，不能嵌套字典 / 数组
+- 使用场景：传统网页表单提交（登录、老项目接口）
+2. data = 字符串（已经 dumps 好的 json_str）
+- 原样把字符串放入请求体
+- 不会自动添加请求头，需要手动写`Content-Type: application/json`
+
+三、json：填充请求体 Body（JSON 快捷方式）
+- 传入：Python 字典
+- 底层自动做两件事：
+  1. `json.dumps()`：字典 → JSON 字符串，放入请求体
+  2. 自动添加请求头：`Content-Type: application/json`
+- 支持：嵌套字典、数组，适合 RESTful 接口（Gitee API）
+- 禁止：给`json=`传已经 dumps 后的字符串，会二次转义，接口报错
+
+四、核心规则
+1. `data` 和 `json`互斥，不能同时写（请求体只有一份）
+2. `params` 和它们不冲突，可以一起用：URL 带查询参数，Body 带 JSON
+
+参数	              数据存放位置	 Content-Type	                    支持嵌套	     典型场景
+params	          URL问号后	     无	                                  ❌	   分页、查询筛选
+data (字典)	      请求体 Body	 application/x-www-form-urlencoded    ❌	   网页表单提交
+data (json字符串)  请求体 Body	 application/json（手动）               ✅	  手动构造 JSON 报文
+json (字典)	      请求体 Body	 application/json（自动）	           ✅	 REST API，如 Gitee

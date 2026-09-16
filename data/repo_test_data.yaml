@@ -3,11 +3,11 @@
   repo_name: "test-repo-yaml-{time}"
   repo_desc: "YAML正常创建仓库"
   expected_status: 201
-  expected_message: "正常创建"
+  expected_msg: "正常创建"
 
 
 - 用例ID: TC002
   repo_name: "test repo yaml_invalid"
   repo_desc: "YAML异常-名称含空格"
   expected_status: 400
-  expected_message: "参数非法"
+  expected_msg: "参数非法"

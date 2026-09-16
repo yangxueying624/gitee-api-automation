@@ -16,7 +16,7 @@ class RequestUtil:
     def send_requests(
         method: str,
         url: str,
-        # Optional[X]代表该参数支持传入X类型的数据，如果不传入，则使用默认值None
+        # Optional[X]代表允许传 X 或者 None，= None时表示不传入时默认值为 None
         headers: Optional[Dict[str, str]] = None,
         json: Optional[Dict[str, Any]] = None,
         params: Optional[Dict[str, Any]] = None,
@@ -44,7 +44,7 @@ class RequestUtil:
                 params=params,
                 timeout=TIMEOUT,
             )
-            # 只显示日志的前500个字符，避免日志过长
+            # 只显示日志前500个字符，避免日志过长
             logger.info(
                 f"接受响应：状态码={response.status_code}，响应体={response.text[:500]}"
             )

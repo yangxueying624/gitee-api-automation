@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, Any
 from dotenv import load_dotenv
 
-# 获取项目根目录
+# BASE_DIR是项目根目录的路径对象（pathlib.Path类型，不是普通字符串）
 BASE_DIR = Path(__file__).parent.parent
 # 拼接出根目录下.env的完整路径，强制读取，不受控制台/脚本启动目录影响
 load_dotenv(dotenv_path=BASE_DIR / ".env")
@@ -20,9 +20,12 @@ def load_config() -> Dict[str, Any]:
 
 
 config: Dict[str, Any] = load_config()
-# 优先级规则：.env文件的环境变量 > config.yaml兜底配置
-# os.getenv会读取load_dotenv加载完成后存入系统的.env变量
-# 当.env文件内未定义GITEE_TOKEN时，自动取用config.yaml内的token作为备用值
+# 优先读取环境变量，取不到再读取config.yaml里面的token兜底
+# os.getenv(变量名，默认值)   当.env文件内未定义GITEE_TOKEN时，自动取用config.yaml内的token作为备用值
 GITEE_TOKEN: str = os.getenv("GITEE_TOKEN",config["gitee"]["token"])
+
+if not GITEE_TOKEN:
+    raise RuntimeError("未配置 GITEE_TOKEN：请在项目根目录创建 .env 文件（参考 .env.example）")
+
 # 超时时间属于无敏感公开配置，直接从yaml读取，无需放入.env
 TIMEOUT: int = config["gitee"]["timeout"]

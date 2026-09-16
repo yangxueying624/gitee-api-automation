@@ -87,9 +87,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.FileHandler(log_file, encoding="utf-8"),  # 把日志写入log_file文件
-        logging.StreamHandler(
-            stream=open("CON", "w", encoding="utf-8")
-        ),  # 把日志输出到控制台
+        logging.StreamHandler(),  # 把日志输出到控制台
     ],
 )
 

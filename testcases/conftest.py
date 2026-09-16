@@ -15,6 +15,8 @@ def repo_client() -> GiteeRepoClient:
 @pytest.fixture
 def created_repo(repo_client: GiteeRepoClient) -> Generator[str, None, None]:
     """
+    生成器类型注解：
+
     Generator [str, None, None] 三段参数含义（固定格式）：
     语法：Generator[产出值类型, 传入send的值类型, 函数最终return返回类型]
     第一个 str：yield full_name 抛出出去的值是字符串（仓库名称）
@@ -24,10 +26,12 @@ def created_repo(repo_client: GiteeRepoClient) -> Generator[str, None, None]:
     repo_name = f"auto-fixture-test-{int(time.time())}"
     full_name = repo_client.create_repo(repo_name, "自动化测试临时仓库")
 
+    # 把full_name抛出给测试用例
     yield full_name
 
     if full_name:
         repo_client.delete_repo(full_name)
+
 
 
 @pytest.fixture(scope="session")
@@ -36,9 +40,7 @@ def file_client() -> GiteeFileClient:
 
 
 @pytest.fixture
-def upload_file(
-    file_client: GiteeFileClient, created_repo: str
-) -> Generator[str, None, None]:
+def upload_file(file_client: GiteeFileClient, created_repo: str) -> Generator[str, None, None]:
     repo_full_name = created_repo
     local_path = "test_file.txt"
     remote_path = "test_upload.txt"
